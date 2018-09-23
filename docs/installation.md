@@ -76,6 +76,8 @@ Para que los nuevos permisos surtan efecto, debes cerrar y volver a abrir la ses
 
 ## Requisitos del curso
 
+### Imágenes
+
 Es necesario traer ya instaladas ciertas imágenes de contenedores. Ejecuta los siguientes comandos en tu equipo (si te da error de permisos asegúrate que has hecho el apartado anterior y abierto y cerrado la sesión).
 
 !!! example
@@ -87,3 +89,14 @@ Es necesario traer ya instaladas ciertas imágenes de contenedores. Ejecuta los 
     Instalar _MariaDB_:
 
         docker pull mariadb:latest
+
+### Herramientas
+
+También es necesario traer una herramienta llamada `Docker Compose`. Puedes instalarla con las instrucciones que hay en la página de [Instalación de Docker Compose](https://docs.docker.com/compose/install/).
+
+Sin embargo, si usas _Ubuntu_ o _Debian_ puedes instalarlo de forma más fácil con _apt_:
+
+!!! example
+    Instalación de _Docker Compose_:
+
+        sudo apt install docker-compose
