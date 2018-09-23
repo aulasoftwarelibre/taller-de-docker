@@ -39,7 +39,12 @@ markdown_extensions:
 
 nav:
     - Inicio: index.md
+    - Introducción: introduction.md
     - Instalación: installation.md
+    - Imágenes: images.md
+    - Contenedores: containers.md
+    - Persistiendo datos: data.md
+    - Levantar un WordPress con Docker: wordpress.md
 
 google_analytics:
     - 'UA-51754922-1'
