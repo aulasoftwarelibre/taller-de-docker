@@ -1,0 +1,46 @@
+site_name: 'Taller de Docker'
+site_author: 'Sergio Gómez <sergio@uco.es>'
+site_description: 'Taller de introducción a docker'
+repo_name: 'aulasoftwarelibre/taller-de-docker'
+repo_url: 'https://github.com/aulasoftwarelibre/taller-de-docker.git'
+
+theme:
+    name: 'material'
+    language: 'es'
+    favicon: 'images/logoasl.png'
+
+extra_css: [extra.css]
+extra:
+    palette:
+        primary: 'green'
+        accent: 'light green'
+    social:
+        - type: 'github'
+          link: 'https://github.com/aulasoftwarelibre'
+        - type: 'twitter'
+          link: 'https://twitter.com/aulasl'
+        - type: 'facebook'
+          link: 'https://facebook.com/aulasl'
+        - type: 'instagram'
+          link: 'https://instagram.com/aulasoftwarelibre'
+    feature:
+        tabs: true
+
+markdown_extensions:
+    - footnotes: ~
+    - admonition: ~
+    - codehilite:
+        guess_lang: false
+        linenums: true
+    - toc:
+        permalink: true
+    - def_list: ~
+    - inline_graphviz: ~
+
+nav:
+    - Inicio: index.md
+    - Instalación: installation.md
+
+google_analytics:
+    - 'UA-51754922-1'
+    - 'auto'
