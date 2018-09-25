@@ -46,6 +46,7 @@ nav:
     - Persistiendo datos: data.md
     - Levantar un WordPress con Docker: wordpress.md
     - Levantar un WordPress con Docker Compose: docker-compose.md
+    - Crear imágenes propias: dockerfile.md
 
 google_analytics:
     - 'UA-51754922-1'
