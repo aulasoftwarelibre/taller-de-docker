@@ -125,6 +125,8 @@ Y por último definimos nuestro _Dockerfile_:
     # Ejecuta nuestra aplicación cuando se inicia el contenedor
     CMD ["python", "app.py"]
 
+Para conocer todas las directivas visita la [documentación oficial de Dockerfile](https://docs.docker.com/engine/reference/builder/).
+
 En total debemos tener 3 archivos:
 
     $ ls
@@ -168,6 +170,8 @@ Obtendremos un mensaje como este:
     Hostname: 0367b056e66e
     Visits: cannot connect to Redis, counter disabled
 
+Ya tenemos una imagen lista para ser usada. Pulsamos `Control+C` para interrumpir y borrar nuestro contenedor.
+
 ### Creando la aplicación
 
 En este caso nuestro contenedor no funciona por sí mismo. Es muy habitual que dependamos de servicios para poder iniciar la aplicación, habitualmente bases de datos. En este caso necesitamos una base de datos _Redis_ que no tenemos.
@@ -191,34 +195,66 @@ Vamos a crear el siguiente archivo _docker-compose.yaml_:
                 - "./data:/data"
             command: redis-server --appendonly yes
 
+La principal diferencia con respecto al capítulo anterior, es que en un servicio podemos indicar una imagen (parámetro `imagen`) o un _build context_ (parámetro `build`). 
+
+Esta es una manera de integrar las dos herramientas que nos proporciona _Docker_: la creación de imágenes y la composición de aplicaciones con servicios.
+
 ### Balanceo de carga
 
 Vamos a modificar nuestro _docker-compose.yaml_:
 
-    :::yaml
     version: "3"
     services:
         web:
             build: .
         redis:
             image: redis
-            ports:
-                - "6379:6379"
             volumes:
                 - "./data:/data"
             command: redis-server --appendonly yes
         lb:
             image: dockercloud/haproxy
             ports:
-                - 80:80
+                - 4000:80
             links:
                 - web
             volumes:
                 - /var/run/docker.sock:/var/run/docker.sock 
 
+En este caso, el servicio web no va a tener acceso al exterior (hemos eliminado el parámetro `ports`). En su lugar hemos añadido un balanceador de carga (el servicio  `lb`).
 
-    networks:
-        front-tier:
-            driver: bridge
-        back-tier:
-            driver: bridge
+Vamos a arrancar esta nueva aplicación, pero esta vez añadiendo varios servicios web:
+
+    docker-composer up -d --scale web=5
+
+Esperamos a que terminen de iniciar los servicios:
+
+    docker-compose up -d --scale web=5
+    Creating network "friendlyhello_default" with the default driver
+    Creating friendlyhello_redis_1 ... done
+    Creating friendlyhello_web_1   ... done
+    Creating friendlyhello_web_2   ... done
+    Creating friendlyhello_web_3   ... done
+    Creating friendlyhello_web_4   ... done
+    Creating friendlyhello_web_5   ... done
+    Creating friendlyhello_lb_1    ... done
+
+Podemos comprobar como del servicio web nos ha iniciado 5 instancias, cada uno con su sufijo numérico correspondiente. Si usamos `docker ps` para ver los contenedores disponibles tendremos:
+
+    docker ps
+    CONTAINER ID  IMAGE                [...]   PORTS                                    NAMES
+    77acae1d0567  dockercloud/haproxy  [...]   443/tcp, 1936/tcp, 0.0.0.0:4000->80/tcp  friendlyhello_lb_1
+    5f12fb8b80c8  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_5
+    fb0024591665  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_2
+    a20d20bdd129  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_4
+    53d7db212df8  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_3
+    41218dbbb882  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_1
+    06f5bf6ed070  redis                [...]   6379/tcp                                 friendlyhello_redis_1
+
+Vamos a fijarnos en el `CONTAINER ID` y vamos a volver a abrir nuestra aplicación: [http://localhost:4000](http://localhost:4000).
+
+Si en esta ocasión vamos recargando la página, veremos como cambian los _hostnames_, que a su vez coinciden con los identificadores de los contenedores anteriores.
+
+!!! info
+    Esta no es la manera adecuada de hacer balanceo de carga, puesto que todos los contenedores están en la misma máquina, lo cual no tiene sentido. Solo es una demostración. Para hacer balanceo de carga real necesitaríamos tener o emular un clustes de máquinas y crear un enjambre (_swarm_).
+
