@@ -161,7 +161,7 @@ Lo que arranca la aplicación Flask:
      * Debug mode: off
      * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
 
-Comprobamos en el puerto 4000 si efectivamente está iniciada o no: [http://localhost:4000](http://localhost:4000)
+Comprobamos en el puerto 4000 si efectivamente está iniciada o no: [http://localhost:4000](http://localhost:4000).
 
 Obtendremos un mensaje como este:
 
@@ -229,7 +229,7 @@ Vamos a arrancar esta nueva aplicación, pero esta vez añadiendo varios servici
 
 Esperamos a que terminen de iniciar los servicios:
 
-    docker-compose up -d --scale web=5
+    $ docker-compose up -d --scale web=5
     Creating network "friendlyhello_default" with the default driver
     Creating friendlyhello_redis_1 ... done
     Creating friendlyhello_web_1   ... done
@@ -241,7 +241,7 @@ Esperamos a que terminen de iniciar los servicios:
 
 Podemos comprobar como del servicio web nos ha iniciado 5 instancias, cada uno con su sufijo numérico correspondiente. Si usamos `docker ps` para ver los contenedores disponibles tendremos:
 
-    docker ps
+    $ docker ps
     CONTAINER ID  IMAGE                [...]   PORTS                                    NAMES
     77acae1d0567  dockercloud/haproxy  [...]   443/tcp, 1936/tcp, 0.0.0.0:4000->80/tcp  friendlyhello_lb_1
     5f12fb8b80c8  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_5
@@ -257,4 +257,55 @@ Si en esta ocasión vamos recargando la página, veremos como cambian los _hostn
 
 !!! info
     Esta no es la manera adecuada de hacer balanceo de carga, puesto que todos los contenedores están en la misma máquina, lo cual no tiene sentido. Solo es una demostración. Para hacer balanceo de carga real necesitaríamos tener o emular un clustes de máquinas y crear un enjambre (_swarm_).
+
+## Compartir imágenes
+
+Si tenemos una imagen que queramos compartir, necesitamos usar un registro. Existe incluso una imagen que nos permite crear uno propio, pero vamos a usar el repositorio público de _Docker_.
+
+Los pasos son:
+
+1. Crear una cuenta de usuario en el [repositorio oficial de _Docker_](https://hub.docker.com).
+1. Pulsar sobre el botón "_Create Repository +_".
+1. En el formulario hay que rellenar solo un dato obligatoriamente: el nombre. Usaremos el de la imagen: _friendlyhello_.
+
+    Nuestro nombre de usuario es el namespace y es obligatorio que tenga uno. Si estuvieramos en alguna organización podríamos elegir entre varios. El resto de campos lo dejamos como está por el momento. La cuenta gratuita solo deja tener un repositorio privado, asi que no lo malgastaremos aquí.
+
+1. Ahora tenemos que conectar nuestro cliente de _Docker_ con nuestra cuenta en el _Hub_. Usamos el comando `docker login`.
+
+        $ docker login
+        Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+        Username: username
+        Password: ********
+        WARNING! Your password will be stored unencrypted in /home/sergio/.docker/config.json.
+        Configure a credential helper to remove this warning. See
+        https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+    !!! danger
+        Las claves se guardan sin cifrar. Hay que configurar un almacen de claves o recordar hacer `docker logout` para borrarla.
+
+        Visita [la web de referencia para saber como crear un almacen](https://docs.docker.com/engine/reference/commandline/login/#credentials-store).
+
+1. Para que las imágenes se puedan guardar, tenemos que etiquetarla con el mismo nombre que tengamos en nuestro repositorio más el _namespace_. Si nuestra cuenta es '_username_' y el repositorio es '_friendlyhello_', debemos crear la imagen con la etiqueta '_username/friendlyhello_'.
+
+        $ docker build -t username/friendlyhello .
+
+    !!! tip
+        Por defecto ya hemos dicho que la etiqueta si no se indica es _latest_. Podemos indicar más de una etiqueta para indicar versiones:
+
+            $ docker build -t username/friendlyhello -t username/friendlyhello:0.1.0 .
+
+        En la próxima que hagamos le subimos la versión en la etiqueta:
+
+            $ docker build -t username/friendlyhello -t username/friendlyhello:0.2.0 .
+
+        De esta manera nuestra imagen aparecerá con tres etiquetas: _latest_ y _0.2.0_ que serán la misma en realidad, y _0.1.0_.
+
+1. Ahora ya podemos enviar nuestra imagen:
+
+        $ docker push username/friendlyhello
+
+## Ejercicios:
+
+1. Cambia el _docker-compose.yaml_ para usar tu imagen en vez de hacer _build_.
+1. Cambia el _docker-compose.yaml_ para usar la imagen de algún compañero. 
 
