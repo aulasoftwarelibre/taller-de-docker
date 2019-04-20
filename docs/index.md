@@ -1,6 +1,8 @@
 # Taller de docker
 
-![Aula Software Libre de la UCO](images/logoasl.png)
+<div align="center">
+    <img width="272" src="./images/logoasl.png" alt="Aula Software Libre de la UCO">
+</div>
 
 Este taller forma parte de las actividades del [Aula de Software Libre de la
 Universidad de Córdoba](https://www.uco.es/aulasoftwarelibre).
