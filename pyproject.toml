@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "taller-de-docker"
+version = "1.0.0"
+description = "Taller de introducción a docker"
+authors = ["Your Name <you@example.com>"]
+license = "CC BY-NC 4.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+mkdocs = "^1.2.3"
+mkdocs-awesome-pages-plugin = "^2.7.0"
+mkdocs-git-revision-date-localized-plugin = "^0.12.1"
+mkdocs-material = "^8.1.11"
+mkdocs-pandoc = "^0.2.6"
+Markdown = "^3.3.6"
+pymdown-extensions = "^9.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

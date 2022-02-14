@@ -1,5 +1,0 @@
-mkdocs
-mkdocs-material
-mkdocs-pandoc
-Markdown
-markdown-inline-graphviz
