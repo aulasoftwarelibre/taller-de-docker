@@ -1,4 +1,4 @@
-# Levantar un _WordPress_ con _Docker_
+# Levantar un WordPress con Docker
 
 Para crear un _blog_ con _WordPress_ necesitamos tener una base de datos dónde almacenar las entradas. Así que empezaremos creándola y después crearemos el contenedor de nuestro _blog_.
 

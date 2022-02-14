@@ -1,54 +1,68 @@
-site_name: 'Taller de Docker'
-site_author: 'Sergio Gómez <sergio@uco.es>'
-site_description: 'Taller de introducción a docker'
-repo_name: 'aulasoftwarelibre/taller-de-docker'
-repo_url: 'https://github.com/aulasoftwarelibre/taller-de-docker.git'
+site_name: "Taller de Docker"
+site_author: "Sergio Gómez <sergio@uco.es>"
+site_description: "Taller de introducción a docker"
+repo_name: "aulasoftwarelibre/taller-de-docker"
+repo_url: "https://github.com/aulasoftwarelibre/taller-de-docker.git"
+
+copyright: Copyleft - CC BY-NC 4.0 - Aula de Software Libre
 
 theme:
-    name: 'material'
-    language: 'es'
-    favicon: 'images/logoasl.png'
+  favicon: "images/logoasl.png"
+  features:
+    - navigation.instant
+  icon:
+    logo: material/git
+  name: "material"
+  language: "es"
+  palette:
+    - media: "(prefers-color-scheme: light)" 
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)" 
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
 
-extra_css: [extra.css]
+plugins:
+  - awesome-pages
+  - git-revision-date-localized:
+      type: date
+  - search
+
+extra_css:
+  - stylesheets/extra.css
 extra:
-    palette:
-        primary: 'green'
-        accent: 'light green'
-    social:
-        - type: 'github'
-          link: 'https://github.com/aulasoftwarelibre'
-        - type: 'twitter'
-          link: 'https://twitter.com/aulasl'
-        - type: 'facebook'
-          link: 'https://facebook.com/aulasl'
-        - type: 'instagram'
-          link: 'https://instagram.com/aulasoftwarelibre'
-    feature:
-        tabs: true
+  social:
+    - icon: fontawesome/brands/github
+      link: "https://github.com/aulasoftwarelibre"
+    - icon: fontawesome/brands/twitter
+      link: "https://twitter.com/aulasl"
+    - icon: fontawesome/brands/facebook
+      link: "https://facebook.com/aulasl"
+    - icon: fontawesome/brands/instagram
+      link: "https://instagram.com/aulasoftwarelibre"
+    - icon: fontawesome/brands/youtube
+      link: "https://www.youtube.com/c/AulaSoftwareLibre"
 
 markdown_extensions:
-    - footnotes: ~
-    - admonition: ~
-    - codehilite:
-        guess_lang: false
-        linenums: true
-    - toc:
-        permalink: true
-    - def_list: ~
-    - mdx_inline_graphviz: ~
+  - admonition: ~
+  - attr_list: ~
+  - codehilite:
+      guess_lang: false
+      linenums: false
+  - def_list: ~
+  - footnotes: ~
+  - toc:
+      permalink: true
+  - pymdownx.keys: ~
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 
-nav:
-    - Inicio: index.md
-    - Introducción: introduction.md
-    - Instalación: installation.md
-    - Imágenes: images.md
-    - Contenedores: containers.md
-    - Persistiendo datos: data.md
-    - Levantar un WordPress con Docker: wordpress.md
-    - Levantar un WordPress con Docker Compose: docker-compose.md
-    - Crear imágenes propias: dockerfile.md
-    - Trucos: tips.md
-
-google_analytics:
-    - 'UA-51754922-1'
-    - 'auto'
+extra:
+  analytics:
+    provider: google
+    property: UA-51754922-1
