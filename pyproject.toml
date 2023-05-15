@@ -15,7 +15,7 @@ mkdocs-git-revision-date-localized-plugin = "^0.12.1"
 mkdocs-material = "^8.1.11"
 mkdocs-pandoc = "^0.2.6"
 Markdown = "^3.3.6"
-pymdown-extensions = "^9.2"
+pymdown-extensions = "^10.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
