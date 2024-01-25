@@ -50,5 +50,5 @@ Los volumenes se crean en un directorio del sistema y no es recomendable acceder
 
 Como todos los objetos de _Docker_, los volúmenes también pueden ser borrados, pero solo si no están en uso. Mucha precaución al borrar los volúmenes, porque perderíamos todos los datos que contenga.
 
-Para borrar un contenedor usaremos `docker volume rm` y el nombre del contenedor.
+Para borrar un volumen usaremos `docker volume rm` y el nombre del volumen.
 
