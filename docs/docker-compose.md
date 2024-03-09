@@ -35,7 +35,7 @@ _Compose_ tiene comandos para manejar todo el ciclo de vida de nuestra aplicaci�
 
 En el mismo directorio donde estábamos en el paso anterior (`~/Sites/wordpress`), vamos a crear un fichero llamado `docker compose.yaml` con el siguiente contenido:
 
-```yaml
+```yaml title="docker-compose.yaml"
 services:
     db:
         image: mariadb:10
@@ -154,7 +154,7 @@ Nos saltamos la sección de redes (_networks_) y vamos a la sección de servicio
 
 Primero la base de datos:
 
-```yaml hl_lines="2"
+```yaml hl_lines="2" title="docker-compose.yaml"
 services:
     db:
         image: mariadb:10
@@ -180,7 +180,7 @@ Es decir, lo anterior es equivalente, excepto por el nombre, a:
 
 Y después nuestro _WordPress_:
 
-```yaml
+```yaml title="docker-compose.yaml"
 services:
     web:
         image: wordpress:6
@@ -223,7 +223,7 @@ La equivalencia de los parámetros es la siguiente:
 
     Para eso usaremos el parámetro `restart`. En el caso de la base de datos de nuestro ejemplo, la configuración quedaría como:
 
-    ```yaml hl_lines="4"
+    ```yaml hl_lines="4" title="docker-compose.yaml"
     services:
         db:
             image: mariadb:10

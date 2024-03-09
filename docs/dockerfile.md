@@ -18,7 +18,7 @@ Creamos nuestro _build context_
 
 Dentro de este directorio crearemos un archivo llamado _Dockerfile_ con este contenido:
 
-```dockerfile
+```dockerfile title="Dockerfile"
 FROM busybox
 COPY /hello /
 RUN cat /hello
@@ -71,7 +71,7 @@ Vamos a crear un aplicación en python y la vamos a guardarla en un contenedor. 
 
 El código de la aplicación es el siguiente, lo guardaremos en un archivo llamado `app.py`:
 
-```python
+```python title="app.py"
 from flask import Flask
 from redis import Redis, RedisError
 import os
@@ -100,12 +100,13 @@ if __name__ == "__main__":
 
 Nuestra aplicación tiene una serie de dependencias (librerías de terceros) que guardaremos en el archivo _requirements.txt_:
 
-    Flask
-    Redis
-
+```txt title="requirements.txt"
+Flask
+Redis
+```
 Y por último definimos nuestro _Dockerfile_:
 
-```dockerfile
+```dockerfile title="Dockerfile"
 # Partimos de una base oficial de python
 FROM python:3-slim
 

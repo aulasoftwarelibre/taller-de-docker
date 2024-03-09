@@ -9,7 +9,7 @@ Portainer es una gestor de contenedores a través de una interfaz web. Para usar
 
 Guardamos el siguiente fichero como _docker-compose.yaml_ en nuestro directorio:
 
-```yaml
+```yaml title="docker-compose.yaml"
 services:
     portainer:
     image: portainer/portainer
@@ -25,7 +25,7 @@ volumes:
 
 Y ejecutamos el contenedor:
 
-    docker-compose up -d
+    docker compose up -d
 
 ## Limpieza
 
