@@ -1,39 +1,48 @@
+# Project information
 site_name: "Taller de Docker"
+site_url: "https://github.com/aulasoftwarelibre/plantilla-talleres"
 site_author: "Sergio Gómez <sergio@uco.es>"
 site_description: "Taller de introducción a docker"
+
+# Repository information
 repo_name: "aulasoftwarelibre/taller-de-docker"
 repo_url: "https://github.com/aulasoftwarelibre/taller-de-docker.git"
 
+# License
 copyright: Copyleft - CC BY-NC 4.0 - Aula de Software Libre
 
+# Configuration
 theme:
   favicon: "images/logoasl.png"
   features:
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
     - navigation.instant
+    - navigation.footer
+    - navigation.tracking
   icon:
     logo: material/git
   name: "material"
   language: "es"
   palette:
-    - media: "(prefers-color-scheme: light)" 
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)" 
+    - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
         icon: material/toggle-switch
-        name: Switch to light mode
+        name: Switch to system preference
 
-plugins:
-  - awesome-pages
-  - git-revision-date-localized:
-      type: date
-  - search
-
-extra_css:
-  - stylesheets/extra.css
 extra:
   social:
     - icon: fontawesome/brands/github
@@ -46,23 +55,62 @@ extra:
       link: "https://instagram.com/aulasoftwarelibre"
     - icon: fontawesome/brands/youtube
       link: "https://www.youtube.com/c/AulaSoftwareLibre"
-
-markdown_extensions:
-  - admonition: ~
-  - attr_list: ~
-  - codehilite:
-      guess_lang: false
-      linenums: false
-  - def_list: ~
-  - footnotes: ~
-  - toc:
-      permalink: true
-  - pymdownx.keys: ~
-  - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
-
-extra:
+    - icon: fontawesome/brands/linkedin
+      link: "https://www.linkedin.com/company/aulasoftwarelibre/"
   analytics:
     provider: google
     property: UA-51754922-1
+
+extra_css:
+  - stylesheets/extra.css
+
+plugins:
+  - awesome-pages
+  - search
+  - social
+  - git-revision-date-localized:
+      type: date
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/mkdocs.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - tables
+  - toc:
+      permalink: true

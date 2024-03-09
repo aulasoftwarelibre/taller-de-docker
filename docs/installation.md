@@ -17,6 +17,12 @@ Debido a que, dependiendo de la distribución, la forma de instalarlo difiere, e
 * CentOS: [https://docs.docker.com/install/linux/docker-ce/centos/](https://docs.docker.com/install/linux/docker-ce/centos/)
 * Fedora: [https://docs.docker.com/install/linux/docker-ce/fedora/](https://docs.docker.com/install/linux/docker-ce/fedora/)
 
+!!! warning 
+    Este taller se basa en Docker Engine. Docker también ofrece Docker Desktop para Linux,
+    además de para otros sistemas privativos. Docker Desktop **no es software libre** y por
+    tanto no recomendamos su uso. Especialmente en Linux, puesto que lo que hace es
+    crear una máquina virtual reduciendo el uso de memoria y recursos.
+
 Si quieres instalar y probar Linux por primera vez, te recomendamos que uses una [versión LTS de Ubuntu](https://www.ubuntu.com/download/desktop), por ser fácil de instalar y tener un ciclo de mantenimiento de seguridad ampliado. Obviamente necesitas tener conexión a Internet para instalar y probar Docker.
 
 Para saber si tienes Docker bien instalado, los tutoriales oficiales siempre te indican inicies un contenedor de ejemplo. Esto es lo que sucede:
@@ -28,34 +34,35 @@ Para saber si tienes Docker bien instalado, los tutoriales oficiales siempre te 
 
 El resultado es el siguiente:
 
-    :::bash hl_lines="1 2 6"
-    $ sudo docker run hello-world
-    Unable to find image 'hello-world:latest' locally
-    latest: Pulling from library/hello-world
-    d1725b59e92d: Pull complete 
-    Digest: sha256:0add3ace90ecb4adbf7777e9aacf18357296e799f81cabc9fde470971e499788
-    Status: Downloaded newer image for hello-world:latest
-    
-    Hello from Docker!
-    This message shows that your installation appears to be working correctly.
-    
-    To generate this message, Docker took the following steps:
-     1. The Docker client contacted the Docker daemon.
-     2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
-        (amd64)
-     3. The Docker daemon created a new container from that image which runs the
-        executable that produces the output you are currently reading.
-     4. The Docker daemon streamed that output to the Docker client, which sent it
-        to your terminal.
-    
-    To try something more ambitious, you can run an Ubuntu container with:
-     $ docker run -it ubuntu bash
-    
-    Share images, automate workflows, and more with a free Docker ID:
-     https://hub.docker.com/
-    
-    For more examples and ideas, visit:
-     https://docs.docker.com/get-started/
+```sh hl_lines="1 2 6"
+$ sudo docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+d1725b59e92d: Pull complete 
+Digest: sha256:0add3ace90ecb4adbf7777e9aacf18357296e799f81cabc9fde470971e499788
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+    1. The Docker client contacted the Docker daemon.
+    2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+    3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+    4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+    $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+    https://hub.docker.com/
+
+For more examples and ideas, visit:
+    https://docs.docker.com/get-started/
+```
 
 En la línea 1 estamos ejecutando el cliente de Docker, y estamos indicando que queremos ejecutar un contenedor a partir de la imagen [hello-world](https://hub.docker.com/_/hello-world/) del registro público de Docker.
 
@@ -72,7 +79,20 @@ Si estamos usando _Docker_ en nuestro ordenador personal, podemos configurar nue
 
         sudo usermod -aG docker $USER
 
-Para que los nuevos permisos surtan efecto, debes cerrar y volver a abrir la sesión. Para problemas relacionados con los permisos visitad [la página del manual oficial](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user).
+Para que los nuevos permisos surtan efecto, debes cerrar y volver a abrir la sesión
+
+!!! example
+    Por defecto tu usuario no adquiere los nuevos grupos, por eso es necesario
+    reiniciar sesión. También puedes ejecutar la siguiente orden en cada consola,
+    hasta que reinicies sesión:
+
+        newgrp docker
+
+Para problemas relacionados con los permisos visitad [la página del manual oficial](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user).
+
+!!! warning
+    Si decides no añadir el grupo `docker` a tu usuario, tendrás que ejecutar 
+    `docker` siempre con sudo. En los ejemplos lo encontrarás sin él.
 
 ## Requisitos del curso
 
@@ -83,20 +103,9 @@ Es necesario traer ya instaladas ciertas imágenes de contenedores. Ejecuta los 
 !!! example
     Instalar _WordPress_:
 
-        docker pull wordpress:latest
+        docker pull wordpress:6
 
 !!! example
     Instalar _MariaDB_:
 
-        docker pull mariadb:latest
-
-### Herramientas
-
-También es necesario traer una herramienta llamada `Docker Compose`. Puedes instalarla con las instrucciones que hay en la página de [Instalación de Docker Compose](https://docs.docker.com/compose/install/).
-
-Sin embargo, si usas _Ubuntu_ o _Debian_ puedes instalarlo de forma más fácil con _apt_:
-
-!!! example
-    Instalación de _Docker Compose_:
-
-        sudo apt install docker-compose
+        docker pull mariadb:10

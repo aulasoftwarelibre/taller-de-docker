@@ -52,17 +52,24 @@ Si en el primer terminal ejecutamos un listado del directorio tmp:
 
 Vemos como podemos modificar un contenedor ya iniciado con `docker container exec`.
 
-Pulsa `Control+C` en el primer terminal para cerrar y borrar el contenedor.
+Pulsa ++ctrl+d++  en el primer terminal para cerrar y borrar el contenedor.
 
 ## Iniciar un contenedor
 
 Con `docker container start` podemos iniciar un contenedor parado:
 
-    $ docker container start peaceful_murdock 
-    peaceful_murdock
-    $ docker ps
-    CONTAINER ID  IMAGE      COMMAND    CREATED         STATUS  PORTS                 NAMES
-    4bd76e08b07f  wordpress  "docker…"  14 minutes ago  Up      0.0.0.0:8080->80/tcp  peaceful_murdock
+!!! info
+    Aquí `peaceful_murdock` es el nombre del contenedor que nos salió en `docker container ls -a`.
+    Tendrás que cambiarlo por el nombre que te salga en tu equipo, dado que cuando no se asigna un
+    nombre de forma específica, se asigna uno automático.
+
+```sh
+$ docker container start peaceful_murdock 
+peaceful_murdock
+$ docker container ls 
+CONTAINER ID  IMAGE      COMMAND    CREATED         STATUS  PORTS                 NAMES
+4bd76e08b07f  wordpress  "docker…"  14 minutes ago  Up      0.0.0.0:8080->80/tcp  peaceful_murdock
+```
 
 Veremos que la web de instalación de _WordPress_ está de nuevo disponible. Solo que ahora el contenedor se ejecuta en segundo plano y no lo podemos detener como antes.
 

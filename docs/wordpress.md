@@ -14,46 +14,47 @@ _WordPress_ soporta los motores relaciones _MySQL_ y _MariaDB_. Usaremos este ú
             -e MYSQL_ROOT_PASSWORD=secret \
             -e MYSQL_DATABASE=wordpress \
             -e MYSQL_USER=manager \
-            -e MYSQL_PASSWORD=secret mariadb:10.3.9
+            -e MYSQL_PASSWORD=secret mariadb:10
 
 La imagen se descargará, si no lo estaba ya, y se iniciará nuestro contenedor de _MariaDB_:
 
-    :::console hl_lines="1 2 3 4 5 6"
-    $ docker run -d --name wordpress-db \
-        --mount source=wordpress-db,target=/var/lib/mysql \
-        -e MYSQL_ROOT_PASSWORD=secret \
-        -e MYSQL_DATABASE=wordpress \
-        -e MYSQL_USER=manager \
-        -e MYSQL_PASSWORD=secret mariadb:10.3.9
-    Unable to find image 'mariadb:10.3.9' locally
-    10.3.9: Pulling from library/mariadb
-    124c757242f8: Pull complete 
-    9d866f8bde2a: Pull complete 
-    fa3f2f277e67: Pull complete 
-    398d32b153e8: Pull complete 
-    afde35469481: Pull complete 
-    31f2ae82b3e3: Pull complete 
-    3eeaf7e45ea6: Pull complete 
-    716982328e17: Pull complete 
-    34ce605c9036: Pull complete 
-    4502ed9073c0: Pull complete 
-    2afafbdf5a96: Pull complete 
-    43d52b11dd31: Pull complete 
-    30c7b70556f3: Pull complete 
-    8b1b39f2f89a: Pull complete 
-    41480b9319d7: Pull complete 
-    Digest: sha256:b7894bd08e5752acdd41fea654cb89467c99e67b8293975bb5d787b27e66ce1a
-    Status: Downloaded newer image for mariadb:10.3.9
-    30634831d17108aa553a5774e27f398760bdbdf32debc3179843e73aa5957956
-    
-    $ docker ps
-    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
-    30634831d171        mariadb:10.3.9      "docker-entrypoint.s…"   20 seconds ago      Up 16 seconds       3306/tcp            wordpress-db
+```console hl_lines="1-6"
+$ docker run -d --name wordpress-db \
+    --mount source=wordpress-db,target=/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=secret \
+    -e MYSQL_DATABASE=wordpress \
+    -e MYSQL_USER=manager \
+    -e MYSQL_PASSWORD=secret mariadb:10
+Unable to find image 'mariadb:10' locally
+10: Pulling from library/mariadb
+124c757242f8: Pull complete 
+9d866f8bde2a: Pull complete 
+fa3f2f277e67: Pull complete 
+398d32b153e8: Pull complete 
+afde35469481: Pull complete 
+31f2ae82b3e3: Pull complete 
+3eeaf7e45ea6: Pull complete 
+716982328e17: Pull complete 
+34ce605c9036: Pull complete 
+4502ed9073c0: Pull complete 
+2afafbdf5a96: Pull complete 
+43d52b11dd31: Pull complete 
+30c7b70556f3: Pull complete 
+8b1b39f2f89a: Pull complete 
+41480b9319d7: Pull complete 
+Digest: sha256:b7894bd08e5752acdd41fea654cb89467c99e67b8293975bb5d787b27e66ce1a
+Status: Downloaded newer image for mariadb:10
+30634831d17108aa553a5774e27f398760bdbdf32debc3179843e73aa5957956
+
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+30634831d171        mariadb:10      "docker-entrypoint.s…"   20 seconds ago      Up 16 seconds       3306/tcp            wordpress-db
+```
 
 El principal cambio en `docker run` con respecto a la última vez es que no hemos usado
 `-p` (el parámetro para publicar puertos) y hemos añadido el parámetro `-d`.
 
-Lo primero que habremos notado es que el contenedor ya no se queda en primer plano. El parámetro `-d` indica que debe ejecutarse como un proceso en segundo plano. Así no podremos pararlo por accidente con `Control+C`.
+Lo primero que habremos notado es que el contenedor ya no se queda en primer plano. El parámetro `-d` indica que debe ejecutarse como un proceso en segundo plano. Así no podremos pararlo por accidente con ++ctrl+c++.
 
 Lo segundo es que vemos que el contenedor usa un puerto, el `3306/tcp`, pero no está linkado a la máquina anfitrión. No tenemos forma de acceder a la base de datos directamente. Nuestra intención es que solo el contenedor de _WordPress_ pueda acceder.
 
@@ -92,7 +93,7 @@ Vamos a crear otra vez nuestro contenedor de _WordPress_, pero esta vez vamos a 
             -e WORDPRESS_DB_USER=manager \
             -e WORDPRESS_DB_PASSWORD=secret \
             -p 8080:80 \
-            wordpress:4.9.8
+            wordpress:6
 
 Cuando termine la ejecución, si accedemos a la dirección [http://localhost:8080/](http://localhost:8080/), ahora sí podremos acabar el proceso de instalación de nuestro WordPress. Si listamos el directorio target comprobaremos que tenemos todos los archivos de instalación accesibles desde el directorio anfitrión.
 

@@ -19,42 +19,28 @@ Por ahora iniciemos la imagen como se indica:
 !!! example
     Iniciar una imagen de _WordPress_:
 
-        docker run -p 8080:80 wordpress
+        docker run -p 8080:80 wordpress:6
 
 Y comprobaremos como se inicia el contenedor:
 
-    :::console hl_lines="1"
-    $ docker run -p 8080:80 wordpress
-    Unable to find image 'wordpress:latest' locally
-    latest: Pulling from library/wordpress
-    802b00ed6f79: Pull complete 
-    59f5a5a895f8: Pull complete 
-    6898b2dbcfeb: Pull complete 
-    8e0903aaa47e: Pull complete 
-    2961af1e196a: Pull complete 
-    71f7016f79a0: Pull complete 
-    5e1a48e5719c: Pull complete 
-    7ae5291984f3: Pull complete 
-    725b65166f31: Pull complete 
-    e90b121f9520: Pull complete 
-    b5a272809bbd: Pull complete 
-    f045f3ae0e2b: Pull complete 
-    7f51c9ea2d8e: Pull complete 
-    5aa9d0ed164a: Pull complete 
-    8eea44e2bfc7: Pull complete 
-    48918885026e: Pull complete 
-    8ac3e8ada01a: Pull complete 
-    d3da911b920f: Pull complete 
-    94c7e0af5b20: Pull complete 
-    e1f39ac90dec: Pull complete 
-    Digest: sha256:7121cdf8e9f01816653a3b2d2f4fc7bfe1dab956f00db5c7e7689e5f1454029a
-    Status: Downloaded newer image for wordpress:latest
-    WordPress not found in /var/www/html - copying now...
-    Complete! WordPress has been successfully copied to /var/www/html
-    AH00558: apache2: Could not reliably determine the server's fully qualified domain name,     using 10.17.0.1. Set the 'ServerName' directive globally to suppress this message
-    AH00558: apache2: Could not reliably determine the server's fully qualified domain name,     using 10.17.0.1. Set the 'ServerName' directive globally to suppress this message
-    [DDD mmm dd hh:mm:ss.iiiiii yyyy] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.25     (Debian) PHP/7.2.10 configured -- resuming normal operations
-    [DDD mmm dd hh:mm:ss.iiiiii yyyy] [core:notice] [pid 1] AH00094: Command line: 'apache2     -D FOREGROUND'
+```sh hl_lines="1"
+$ docker run -p 8080:80 wordpress
+Unable to find image 'wordpress:latest' locally
+latest: Pulling from library/wordpress
+802b00ed6f79: Pull complete 
+[...]
+d3da911b920f: Pull complete 
+94c7e0af5b20: Pull complete 
+e1f39ac90dec: Pull complete 
+Digest: sha256:7121cdf8e9f01816653a3b2d2f4fc7bfe1dab956f00db5c7e7689e5f1454029a
+Status: Downloaded newer image for wordpress:latest
+WordPress not found in /var/www/html - copying now...
+Complete! WordPress has been successfully copied to /var/www/html
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name,     using 10.17.0.1. Set the 'ServerName' directive globally to suppress this message
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name,     using 10.17.0.1. Set the 'ServerName' directive globally to suppress this message
+[DDD mmm dd hh:mm:ss.iiiiii yyyy] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.25     (Debian) PHP/7.2.10 configured -- resuming normal operations
+[DDD mmm dd hh:mm:ss.iiiiii yyyy] [core:notice] [pid 1] AH00094: Command line: 'apache2     -D FOREGROUND'
+```
 
 Vemos en la línea nueva un nuevo parámetro: `-p 8080:80`. Por defecto, un contenedor está totalmente aislado. Pero si estamos montando un blog con _WordPress_ vamos a necesitar acceder a él desde el navegador.
 
@@ -65,15 +51,16 @@ Con el parámetro `-p`, versión corta de `--publish`, podemos indicar que estam
 
     En este caso, el formato de `publish` es:
 
-        :::man
-           -p, --publish ip:[hostPort]:containerPort | [hostPort:]containerPort
-              Publish a container's port, or range of ports, to the host.
-    
-           Both hostPort and containerPort can be specified as a range.  When specifying ranges for both, the number of ports in ranges should be equal.
-    
-           Examples: -p 1234-1236:1222-1224, -p 127.0.0.1:$HOSTPORT:$CONTAINERPORT.
-    
-           Use docker port(1) to see the actual mapping, e.g. docker port CONTAINER $CONTAINERPORT.
+    ``` man
+    -p, --publish ip:[hostPort]:containerPort | [hostPort:]containerPort
+        Publish a container's port, or range of ports, to the host.
+
+    Both hostPort and containerPort can be specified as a range.  When specifying ranges for both, the number of ports in ranges should be equal.
+
+    Examples: -p 1234-1236:1222-1224, -p 127.0.0.1:$HOSTPORT:$CONTAINERPORT.
+
+    Use docker port(1) to see the actual mapping, e.g. docker port CONTAINER $CONTAINERPORT.
+    ```
 
 Vamos a abrir la siguiente página web en nuestro navegador:
 
@@ -83,9 +70,8 @@ La cual nos mostrará el asistente de instalación de _WordPress_, el cual no va
 
 ![Instalación de _WordPress_](./images/install-wordpress.png)
 
-En su lugar vamos a la consola e interrumpimos la ejecución del contenedor con `Control+C`:
+En su lugar vamos a la consola e interrumpimos la ejecución del contenedor con ++ctrl+c++:
 
-    :::console
     ^C[DDD mmm dd hh:mm:ss.iiiiii yyyy] [mpm_prefork:notice] [pid 1] AH00169: caught SIGTERM, shutting down
 
 ## Gestión de imágenes
@@ -98,13 +84,12 @@ Para usar una en concreto se usa dos puntos seguido del nombre de la versión. S
 
 Podemos descargar imágenes con la orden `docker pull`:
 
-    :::console
-    $ docker pull wordpress:latest
+    $ docker pull wordpress:6
     latest: Pulling from library/wordpress
     Digest: sha256:7121cdf8e9f01816653a3b2d2f4fc7bfe1dab956f00db5c7e7689e5f1454029a
     Status: Image is up to date for wordpress:latest
     
-    $  docker pull wordpress:php7.1
+    $ docker pull wordpress:php7.1
     php7.1: Pulling from library/wordpress
     802b00ed6f79: Already exists 
     59f5a5a895f8: Already exists 
@@ -162,7 +147,6 @@ Si queremos dejar de usar alguna imagen usaremos `docker rmi`:
 !!! warning
     Si una imagen está en uso por algún contenedor, no nos dejará eliminarla.
 
-        :::console
         $ docker rmi hello-world:latest
         Error response from daemon: conflict: unable to remove repository reference "hello-world:latest" (must force) - container 5ae8bbb8768d is using its referenced image 4ab4c602aa5e
 

@@ -18,10 +18,11 @@ Creamos nuestro _build context_
 
 Dentro de este directorio crearemos un archivo llamado _Dockerfile_ con este contenido:
 
-    :::env
-    FROM busybox
-    COPY /hello /
-    RUN cat /hello
+```dockerfile
+FROM busybox
+COPY /hello /
+RUN cat /hello
+```
 
 | Directiva | Explicación |
 |--|--|
@@ -70,31 +71,32 @@ Vamos a crear un aplicación en python y la vamos a guardarla en un contenedor. 
 
 El código de la aplicación es el siguiente, lo guardaremos en un archivo llamado `app.py`:
 
-    :::python
-    from flask import Flask
-    from redis import Redis, RedisError
-    import os
-    import socket
+```python
+from flask import Flask
+from redis import Redis, RedisError
+import os
+import socket
 
-    # Connect to Redis
-    redis = Redis(host="redis", db=0, socket_connect_timeout=2, socket_timeout=2)
+# Connect to Redis
+redis = Redis(host="redis", db=0, socket_connect_timeout=2, socket_timeout=2)
 
-    app = Flask(__name__)
+app = Flask(__name__)
 
-    @app.route("/")
-    def hello():
-        try:
-            visits = redis.incr("counter")
-        except RedisError:
-            visits = "<i>cannot connect to Redis, counter disabled</i>"
+@app.route("/")
+def hello():
+    try:
+        visits = redis.incr("counter")
+    except RedisError:
+        visits = "<i>cannot connect to Redis, counter disabled</i>"
 
-        html = "<h3>Hello {name}!</h3>" \
-               "<b>Hostname:</b> {hostname}<br/>" \
-               "<b>Visits:</b> {visits}"
-        return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(),  visits=visits)
+    html = "<h3>Hello {name}!</h3>" \
+            "<b>Hostname:</b> {hostname}<br/>" \
+            "<b>Visits:</b> {visits}"
+    return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(),  visits=visits)
 
-    if __name__ == "__main__":
-        app.run(host='0.0.0.0', port=80)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)
+```
 
 Nuestra aplicación tiene una serie de dependencias (librerías de terceros) que guardaremos en el archivo _requirements.txt_:
 
@@ -103,27 +105,28 @@ Nuestra aplicación tiene una serie de dependencias (librerías de terceros) que
 
 Y por último definimos nuestro _Dockerfile_:
 
-    :::env
-    # Partimos de una base oficial de python
-    FROM python:2.7-slim
+```dockerfile
+# Partimos de una base oficial de python
+FROM python:3-slim
 
-    # El directorio de trabajo es desde donde se ejecuta el contenedor al iniciarse
-    WORKDIR /app
+# El directorio de trabajo es desde donde se ejecuta el contenedor al iniciarse
+WORKDIR /app
 
-    # Copiamos todos los archivos del build context al directorio /app del contenedor
-    COPY . /app
+# Copiamos todos los archivos del build context al directorio /app del contenedor
+COPY . /app
 
-    # Ejecutamos pip para instalar las dependencias en el contenedor
-    RUN pip install --trusted-host pypi.python.org -r requirements.txt
+# Ejecutamos pip para instalar las dependencias en el contenedor
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-    # Indicamos que este contenedor se comunica por el puerto 80/tcp
-    EXPOSE 80
+# Indicamos que este contenedor se comunica por el puerto 80/tcp
+EXPOSE 80
 
-    # Declaramos una variable de entorno
-    ENV NAME World
+# Declaramos una variable de entorno
+ENV NAME World
 
-    # Ejecuta nuestra aplicación cuando se inicia el contenedor
-    CMD ["python", "app.py"]
+# Ejecuta nuestra aplicación cuando se inicia el contenedor
+CMD ["python", "app.py"]
+```
 
 Para conocer todas las directivas visita la [documentación oficial de Dockerfile](https://docs.docker.com/engine/reference/builder/).
 
@@ -170,7 +173,7 @@ Obtendremos un mensaje como este:
     Hostname: 0367b056e66e
     Visits: cannot connect to Redis, counter disabled
 
-Ya tenemos una imagen lista para ser usada. Pulsamos `Control+C` para interrumpir y borrar nuestro contenedor.
+Ya tenemos una imagen lista para ser usada. Pulsamos ++ctrl+c++ para interrumpir y borrar nuestro contenedor.
 
 ### Creando la aplicación
 
@@ -180,20 +183,20 @@ Como vimos en el apartado anterior, vamos a aprovechar las características de _
 
 Vamos a crear el siguiente archivo _docker-compose.yaml_:
 
-    :::yaml
-    version: "3"
-    services:
-        web:
-            build: .
-            ports:
-                - "4000:80"
-        redis:
-            image: redis
-            ports:
-                - "6379:6379"
-            volumes:
-                - "./data:/data"
-            command: redis-server --appendonly yes
+```yaml title="docker-compose.yaml"
+services:
+    web:
+        build: .
+        ports:
+            - "4000:80"
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - "./data:/data"
+        command: redis-server --appendonly yes
+```
 
 La principal diferencia con respecto al capítulo anterior, es que en un servicio podemos indicar una imagen (parámetro `imagen`) o un _build context_ (parámetro `build`). 
 
@@ -203,33 +206,48 @@ Esta es una manera de integrar las dos herramientas que nos proporciona _Docker_
 
 Vamos a modificar nuestro _docker-compose.yaml_:
 
-    version: "3"
-    services:
-        web:
-            build: .
-        redis:
-            image: redis
-            volumes:
-                - "./data:/data"
-            command: redis-server --appendonly yes
-        lb:
-            image: dockercloud/haproxy
-            ports:
-                - 4000:80
-            links:
-                - web
-            volumes:
-                - /var/run/docker.sock:/var/run/docker.sock 
+```yaml title="docker-compose.yaml"
+services:
+    web:
+        build: .
+        labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.web.rule=Host(`localhost`)"
+        - "traefik.http.routers.web.entrypoints=web"
+        - "traefik.http.services.web.loadbalancer.server.port=80"
+    redis:
+        image: redis
+        volumes:
+            - "./data:/data"
+        command: redis-server --appendonly yes
+        labels:
+        - "traefik.enable=false"
+    traefik:
+        image: traefik:v2.3
+        command:
+        - "--log.level=DEBUG"
+        - "--api.insecure=true"
+        - "--providers.docker=true"
+        - "--providers.docker.exposedByDefault=false"
+        - "--entrypoints.web.address=:4000"
+        ports:
+        - "4000:4000" # Exponer Traefik en el puerto 4000 de localhost
+        - "8080:8080" # Dashboard de Traefik
+        volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+        labels:
+        - "traefik.enable=true"
+```
 
-En este caso, el servicio web no va a tener acceso al exterior (hemos eliminado el parámetro `ports`). En su lugar hemos añadido un balanceador de carga (el servicio  `lb`).
+En este caso, el servicio web no va a tener acceso al exterior (hemos eliminado el parámetro `ports`). En su lugar hemos añadido un balanceador de carga (el servicio  `traefik`).
 
 Vamos a arrancar esta nueva aplicación, pero esta vez añadiendo varios servicios web:
 
-    docker-composer up -d --scale web=5
+    docker compose up -d --scale web=5
 
 Esperamos a que terminen de iniciar los servicios:
 
-    $ docker-compose up -d --scale web=5
+    $ docker compose up -d --scale web=5
     Creating network "friendlyhello_default" with the default driver
     Creating friendlyhello_redis_1 ... done
     Creating friendlyhello_web_1   ... done
@@ -237,13 +255,13 @@ Esperamos a que terminen de iniciar los servicios:
     Creating friendlyhello_web_3   ... done
     Creating friendlyhello_web_4   ... done
     Creating friendlyhello_web_5   ... done
-    Creating friendlyhello_lb_1    ... done
+    Creating friendlyhello_traefik_1    ... done
 
 Podemos comprobar como del servicio web nos ha iniciado 5 instancias, cada uno con su sufijo numérico correspondiente. Si usamos `docker ps` para ver los contenedores disponibles tendremos:
 
     $ docker ps
     CONTAINER ID  IMAGE                [...]   PORTS                                    NAMES
-    77acae1d0567  dockercloud/haproxy  [...]   443/tcp, 1936/tcp, 0.0.0.0:4000->80/tcp  friendlyhello_lb_1
+    77acae1d0567  traefik              [...]   443/tcp, 1936/tcp, 0.0.0.0:4000->80/tcp  friendlyhello_traefik_1
     5f12fb8b80c8  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_5
     fb0024591665  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_2
     a20d20bdd129  friendlyhello_web    [...]   80/tcp                                   friendlyhello_web_4
@@ -304,7 +322,7 @@ Los pasos son:
 
         $ docker push username/friendlyhello
 
-## Ejercicios:
+## Ejercicios
 
 1. Cambia el _docker-compose.yaml_ para usar tu imagen en vez de hacer _build_.
 1. Cambia el _docker-compose.yaml_ para usar la imagen de algún compañero. 
